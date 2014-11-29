@@ -1,0 +1,25 @@
+= Library for packing sprite sheets.
+
+Zwoptex is a ruby library to pack images into sprite sheets. It requires ChunkyPNG and Plist gems.
+
+== Usage
+
+  images = {
+    'fiskemel.png' => ChunkyPNG::Image.from_file('images/fiskemel.png'),
+    'kridt.png' => ChunkyPNG::Image.from_file('images/kridt.png'),
+    'skalle.png' => ChunkyPNG::Image.from_file('images/skalle.png')
+  }
+
+  # creating an atlas 
+  atlas = Zwoptex::Atlas.new(1024, 1024, images)
+
+  # arrange images using tree algorithm
+  atlas.pack_using_tree! :spacing => 2
+
+  # save coords data
+  plist_content = atlas.format_cocos2d_plist(:texture_filename => 'atlas.png')
+  File.write 'atlas.plist', plist_content
+
+  # save image
+  image = atlas.render_image
+  image.save 'atlas.png', :compression => Zlib::BEST_COMPRESSION
